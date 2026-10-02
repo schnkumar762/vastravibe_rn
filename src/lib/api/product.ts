@@ -5,7 +5,7 @@ const createProduct = async () => {
     console.log('Calling POST /products...');
 
     const response = await RN_PUBLIC_API.post('/products', {
-      productName: 'Green Check',
+      productName: 'from app platform',
       image: 'greencheck.jpg',
       price: 110,
     });
