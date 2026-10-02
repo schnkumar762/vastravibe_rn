@@ -2,6 +2,15 @@ apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
+/** ENV CONFIG */
+project.ext.envConfigFiles = [
+    stagingdebug: ".env.staging",
+    stagingrelease: ".env.staging",
+    productiondebug: ".env.production",
+    productionrelease: ".env.production",
+]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
@@ -52,6 +61,9 @@ react {
 
     /* Autolinking */
     autolinkLibrariesWithApp()
+
+    
+    debuggableVariants = ["localDebug", "stagingDebug", "productionDebug"]
 }
 
 /**
@@ -84,6 +96,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+         // Required for react-native-config
+        resValue "string", "build_config_package", "com.vastravibe_rn"
     }
     signingConfigs {
         debug {
@@ -105,6 +119,28 @@ android {
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
+
+    flavorDimensions "env"
+
+     productFlavors {
+        local {
+            dimension "env"
+            applicationIdSuffix ".local"
+            versionNameSuffix "-local"
+            resValue "string", "app_name", "vastravibe(Local)"
+        }
+        staging {
+            dimension "env"
+            applicationIdSuffix ".staging"
+            versionNameSuffix "-staging"
+            resValue "string", "app_name", "vastravibe(Staging)"
+        }
+        production {
+            dimension "env"
+        }
+    }
+
+
 }
 
 dependencies {
