@@ -1,2 +1,11 @@
-const API_ROUTES = {};
+import CONFIG from '../config/env';
+const API_ROUTES = {
+  BASE: CONFIG.API_BASE_URL,
+
+  PRODUCTS: {
+    CREATE: `${CONFIG.API_BASE_URL}/products`,
+    LIST: `${CONFIG.API_BASE_URL}/products`,
+    DETAIL: `${CONFIG.API_BASE_URL}/products/:id`,
+  },
+};
 export default API_ROUTES;
