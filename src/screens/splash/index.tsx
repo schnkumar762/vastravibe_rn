@@ -1,22 +1,13 @@
-import { Button, Text, View } from 'react-native';
-import PRODUCT_API from '../../lib/api/product';
+import { Image, View } from 'react-native';
 
 function SplashScreen() {
-  const handleCreateProduct = async () => {
-    try {
-      console.log('Creating Product...');
-      const product = await PRODUCT_API.createProduct();
-
-      console.log('Created Product:', product);
-    } catch (error) {
-      console.log('Failed to create product:', error);
-    }
-  };
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Splash Screen</Text>
-
-      <Button title="Create Product" onPress={handleCreateProduct} />
+    <View style={{ flex: 1, backgroundColor: 'blue' }}>
+      <Image
+        source={require('../../assets/splashgif.gif')}
+        style={{ flex: 1, width: '100%', height: '100%' }}
+        resizeMode="cover"
+      />
     </View>
   );
 }
