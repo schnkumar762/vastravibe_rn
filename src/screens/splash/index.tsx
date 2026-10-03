@@ -1,15 +1,13 @@
-import { Image, Text, View } from 'react-native';
+import { Image, View } from 'react-native';
 
 function SplashScreen() {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: 'blue' }}>
       <Image
         source={require('../../assets/splashgif.gif')}
-        // source={require('../../assets/samplepng.png')}
-        style={{ width: 200, height: 200 }}
+        style={{ flex: 1, width: '100%', height: '100%' }}
         resizeMode="cover"
       />
-      <Text style={{ fontSize: 24, marginTop: 20 }}>Welcome to My App</Text>
     </View>
   );
 }
