@@ -1,4 +1,5 @@
-import {  Text, View } from 'react-native';
+import {   View } from 'react-native';
+import { Text } from '../../components/MyText';
 
 function SplashScreen() {
 
@@ -10,7 +11,7 @@ function SplashScreen() {
         style={{ flex: 1, width: '100%', height: '100%' }}
         resizeMode="cover"
       /> */}
-<Text className="text-red-500 text-2xl items-center justify-center">Hii</Text>
+<Text className=" text-2xl items-center justify-center">Hii</Text>
 
     </View>
   );
