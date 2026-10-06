@@ -39,7 +39,10 @@ function StartScreen() {
             {/* Button */}
 
 <View>
-    <TouchableOpacity>
+    <TouchableOpacity onPress={()=>{
+
+      navigation.navigate('Signup')
+    }}>
         <View>
             <Text>Let's get started</Text>
         </View>
@@ -52,7 +55,8 @@ function StartScreen() {
 
                 <Text>I already have an account</Text>
                 <TouchableOpacity onPress={()=>{
-                    console.log("Sign In button pressed");
+                  
+                    navigation.navigate('Login')
                 }}>
                     <View className="bg-blue-500 p-2 rounded">
                         <Text className="text-white">Sign In</Text>
@@ -77,3 +81,19 @@ function StartScreen() {
 }
 
 export default StartScreen;
+
+// function StartScreen() {
+//   const navigation =
+//     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+//   return (
+//     <View style={{ flex: 1 }}>
+
+//         <View className="h-10"></View>
+//       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+//         <Text>Go Login</Text>
+//       </TouchableOpacity>
+//     </View>
+//   );
+// }
+// export default StartScreen;

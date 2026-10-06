@@ -57,7 +57,7 @@ function OnboardingScreen() {
         const interval = setInterval(handleNext, 3000); // Change slide every 3 seconds
 
         return () => clearInterval(interval); // Clean up the interval on unmount
-    },[currentIndex,navigation]);
+    },[currentIndex]);
 
     const renderItem = ({ item }: { item: typeof slides[number] }) => {
 return (
