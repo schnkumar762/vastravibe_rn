@@ -1,3 +1,16 @@
+import { Text, View } from "react-native";
+
+function OnboardingScreen() {
+    return (
+        <View className="flex-1 bg-blue-500 justify-center items-center">
+            <Text>Onboarding Screen</Text>
+            </View>
+    );
+}
+export default OnboardingScreen;
+
+
+/*
 import { FlatList, Image, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { ASSETS } from '@/constants/assets';
@@ -94,3 +107,4 @@ return (
   </View>;
 }
 export default OnboardingScreen;
+*/

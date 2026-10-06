@@ -8,11 +8,17 @@ function StartScreen() {
     const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
 
     return (
-        <View className="flex-1 bg-white">
+        <View className="flex-1 bg-white justify-center items-center">
 
             {/*Logo */}
 
-            <View>
+            <View className="h-[134px] w-[134px] rounded-full bg-white items-center justify-center" style={{
+                elevation: 5,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 3 },
+                shadowOpacity: 0.16,
+                shadowRadius: 8,
+            }}>
 
                 <Image source={require('../../../assets/images/logo.png')}/>
             </View>

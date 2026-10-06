@@ -7,12 +7,15 @@ module.exports = {
   theme: {
     fontFamily: {
        'regular':['Nunito-Regular'],
-            'nunito-light': ['Nunito-Light'],
-            'nunito-medium': ['Nunito-Medium'],
-            'nunito-semibold': ['Nunito-SemiBold'],
-            'nunito-bold': ['Nunito-Bold'],
-            'nunito-italic': ['Nunito-Italic'],
-            'nunito-medium-italic': ['Nunito-MediumItalic']
+  'raleway-regular': ['Raleway-Regular'],
+  'raleway-medium': ['Raleway-Medium'],
+  'raleway-semibold': ['Raleway-SemiBold'],
+  'raleway-bold': ['Raleway-Bold'],
+
+  'nunito-regular': ['NunitoSans-Regular'],
+  'nunito-semibold': ['NunitoSans-SemiBold'],
+  'nunito-bold': ['NunitoSans-Bold'],
+           
     },
     extend: {},
   },
