@@ -57,6 +57,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>nunitosans-bold.ttf</string>
+		<string>nunitosans-medium.ttf</string>
 		<string>nunitosans-regular.ttf</string>
 		<string>nunitosans-semibold.ttf</string>
 		<string>Raleway-Bold.ttf</string>

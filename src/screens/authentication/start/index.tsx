@@ -2,6 +2,7 @@ import { View ,Text, Image, TouchableOpacity} from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import type { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import type { RootStackParamList } from '@/navigation/types';
+import { Button } from "@/components/MyButton";
 
 function StartScreen() {
 
@@ -12,7 +13,7 @@ function StartScreen() {
 
             {/*Logo */}
 
-            <View className="h-[134px] w-[134px] rounded-full bg-white items-center justify-center" style={{
+            <View className="h-[134px] w-[134px] rounded-full bg-white items-center justify-center mb-4" style={{
                 elevation: 5,
                 shadowColor: '#000',
                 shadowOffset: { width: 0, height: 3 },
@@ -26,17 +27,17 @@ function StartScreen() {
 
             {/* Title */}
 
-            <View>
+            <View className="mb-2">
 
-                <Text>Vastravibe</Text>
+                <Text className="text-6xl font-raleway-bold text-[#202020]">Vastravibe</Text>
 
             </View>
 
 
             {/* Subtitle */}
-            <View>
-            <Text>Indian Textile Collection</Text>
-             </View>
+            <View className="mb-16">
+              <Text className="text-3xl font-nunito-regular  text-[#202020]" style={{ fontWeight: '100' }}>Indian Textile Collection</Text>
+            </View>
 
 
 
@@ -44,30 +45,33 @@ function StartScreen() {
 
             {/* Button */}
 
-<View>
-    <TouchableOpacity onPress={()=>{
+           <View className="mb-4">
 
-      navigation.navigate('Signup')
-    }}>
-        <View>
-            <Text>Let's get started</Text>
-        </View>
-    </TouchableOpacity>
-</View>
+            <Button title="Let's get started" onPress={() => navigation.navigate('Signup')}/>
+          
+           </View>
   
             {/*Text*/}   {/*next button*/}
 
-            <View>
+            <View className="mb-4 flex-row mx-4">
 
                 <Text>I already have an account</Text>
-                <TouchableOpacity onPress={()=>{
-                  
-                    navigation.navigate('Login')
-                }}>
-                    <View className="bg-blue-500 p-2 rounded">
-                        <Text className="text-white">Sign In</Text>
-                    </View>
-                </TouchableOpacity>
+                <TouchableOpacity>
+                <View className="h-5 w-5 rounded-full bg-blue-500">
+                    
+                </View>
+                   </TouchableOpacity>
+
+
+
+
+
+
+             
+             
+
+
+                
             </View>
 
            
@@ -87,19 +91,3 @@ function StartScreen() {
 }
 
 export default StartScreen;
-
-// function StartScreen() {
-//   const navigation =
-//     useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-
-//   return (
-//     <View style={{ flex: 1 }}>
-
-//         <View className="h-10"></View>
-//       <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-//         <Text>Go Login</Text>
-//       </TouchableOpacity>
-//     </View>
-//   );
-// }
-// export default StartScreen;
