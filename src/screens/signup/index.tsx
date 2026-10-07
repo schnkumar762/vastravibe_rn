@@ -1,4 +1,6 @@
+import { Button } from '@/components/MyButton';
 import { Text } from '@/components/MyText';
+import { TextInput } from '@/components/MyTextInput';
 import {  View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 
@@ -7,11 +9,11 @@ function SignupScreen() {
 
     {/* */}
    <Text className="text-6xl font-raleway-bold text-[#202020] mb-3 mt-40">Create</Text>
-   <Text className='text-6xl font-raleway-bold text-[#121212] mb-3'>Account</Text>
+   <Text className='text-6xl font-raleway-bold text-[#121212] mb-6'>Account</Text>
 
     {/* camera svg*/}
 
-   <View className="items-start mt-8">
+   <View className="items-start ">
         <Svg width={90} height={90} viewBox="0 0 90 90" fill="none">
 
           {/* Outer dashed circle */}
@@ -52,10 +54,21 @@ function SignupScreen() {
 
     {/*textbox */}
 
-    
+    <TextInput title='Email' suffixIcon={false}/>
+
+    <TextInput title='Password' suffixIcon={false}/>
+
+    <TextInput title='Your number' suffixIcon={false}/>
+
+
+
+
 
     {/* buttons*/}
 
+<Button title='Done' />
+
+<Button title='Cancel' className='' textclassname='text-red-500'/>
 
 
 
