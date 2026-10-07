@@ -7,6 +7,9 @@
 
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import RootNavigator from './src/navigation/RootNavigator';
+import "./global.css";
+
+
 
 function App() {
   return (

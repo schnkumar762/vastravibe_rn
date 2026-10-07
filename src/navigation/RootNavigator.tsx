@@ -6,7 +6,11 @@ import LoginScreen from '../screens/login';
 import SignupScreen from '../screens/signup';
 import HomePageScreen from '../screens/homepage';
 
-const Stack = createNativeStackNavigator();
+import type { RootStackParamList } from './types';
+import StartScreen from '@/screens/authentication/start';
+
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
 function RootNavigator() {
   return (
     <NavigationContainer>
@@ -16,10 +20,12 @@ function RootNavigator() {
         }}
       >
         <Stack.Screen name="Splash" component={SplashScreen} />
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="HomePage" component={HomePageScreen} />
+
+        <Stack.Screen name="Start" component={StartScreen} />
         
       </Stack.Navigator>
     </NavigationContainer>
