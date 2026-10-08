@@ -13,7 +13,7 @@ function SignupScreen() {
 
     {/* camera svg*/}
 
-   <View className="items-start ">
+   <View className="items-start mb-6">
         <Svg width={90} height={90} viewBox="0 0 90 90" fill="none">
 
           {/* Outer dashed circle */}
@@ -54,11 +54,11 @@ function SignupScreen() {
 
     {/*textbox */}
 
-    <TextInput title='Email' suffixIcon={false}/>
+    <TextInput placeholder='Email' className='mb-4'/>
 
-    <TextInput title='Password' suffixIcon={false}/>
+    <TextInput placeholder='Password' className='mb-4'/>
 
-    <TextInput title='Your number' suffixIcon={false}/>
+    <TextInput placeholder='Your number' className='mb-20'/>
 
 
 
@@ -66,18 +66,20 @@ function SignupScreen() {
 
     {/* buttons*/}
 
-<Button title='Done' />
+  <Button title='Done' className='mb-6'/>
 
-<Button title='Cancel' className='' textclassname='text-red-500'/>
+   <Button title='Cancel' className='bg-white mb-4' textclassname='text-black'/>
 
-
-
-
+   </View>
 
 
 
-   
-  </View>;
+
+
+
+
+
+
 }
 
 export default SignupScreen;
