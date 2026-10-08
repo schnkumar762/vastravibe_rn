@@ -8,6 +8,7 @@ import HomePageScreen from '../screens/homepage';
 
 import type { RootStackParamList } from './types';
 import StartScreen from '@/screens/authentication/start';
+// import ProductDetail from '@/screens/core/ProductDetail';
 
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -20,11 +21,11 @@ function RootNavigator() {
         }}
       >
         <Stack.Screen name="Splash" component={SplashScreen} />
-        
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="Signup" component={SignupScreen} />
         <Stack.Screen name="HomePage" component={HomePageScreen} />
-
+        {/* <Stack.Screen name="ProductDetail" component={ProductDetail}/> */}
         <Stack.Screen name="Start" component={StartScreen} />
         
       </Stack.Navigator>
