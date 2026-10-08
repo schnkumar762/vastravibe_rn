@@ -1,7 +1,11 @@
+import { Text } from "@/components/MyText";
 import { View } from "react-native";
 
 function Account(){
-    return <View></View>
+    return <View>
+
+        <Text>Account</Text>
+    </View>
 }
 
 export default Account;

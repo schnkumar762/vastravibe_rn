@@ -1,7 +1,10 @@
+import { Text } from "@/components/MyText";
 import { View } from "react-native";
 
 function Cart(){
-    return <View></View>
+    return <View>
+        <Text>Cart</Text>
+    </View>
 }
 
 export default Cart;
