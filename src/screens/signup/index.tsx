@@ -1,10 +1,52 @@
 import { Button } from '@/components/MyButton';
 import { Text } from '@/components/MyText';
 import { TextInput } from '@/components/MyTextInput';
-import {  View } from 'react-native';
+import { useState } from 'react';
+import {  Alert, View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
-
+import { useNavigation } from "@react-navigation/core";
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/navigation/types';
+import USER_AUTH_API from "@/lib/api/auth";
 function SignupScreen() {
+const navigation =
+  useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+const [email, setEmail] = useState("");
+const [password, setPassword] = useState("");
+const [phone, setPhone] = useState("");
+const [loading, setLoading] = useState(false);
+
+  const handleSignup = async ()=>{
+   
+
+     if (!email.trim() || !password || !phone.trim()) {
+    Alert.alert("Validation", "Please fill all fields.");
+    return;
+  }
+
+  try {
+     setLoading(true);
+
+       const response = await USER_AUTH_API.userSignup({
+      firstName: "John Doe",
+      email: email.trim(),
+      password,
+      phone: phone.trim(),
+    });
+Alert.alert("Success", response.data.message, [
+  {
+    text: "OK",
+    onPress: () => navigation.navigate("Login"),
+  },
+]);
+  } catch (error){console.warn(error)}
+  finally {
+    setLoading(false);
+  }
+  
+
+  };
   return <View className='flex-1 px-8'>
 
     {/* */}
@@ -54,11 +96,11 @@ function SignupScreen() {
 
     {/*textbox */}
 
-    <TextInput placeholder='Email' className='mb-4'/>
+    <TextInput placeholder='Email' className='mb-4' value={email} onChangeText={setEmail}/>
 
-    <TextInput placeholder='Password' className='mb-4'/>
+    <TextInput placeholder='Password' className='mb-4' value={password} onChangeText={setPassword}/>
 
-    <TextInput placeholder='Your number' className='mb-20'/>
+    <TextInput placeholder='Your number' className='mb-20' value={phone} onChangeText={setPhone}/>
 
 
 
@@ -66,9 +108,9 @@ function SignupScreen() {
 
     {/* buttons*/}
 
-  <Button title='Done' className='mb-6'/>
+  <Button title='Done' className='mb-6' onPress={handleSignup} disabled={loading}/>
 
-   <Button title='Cancel' className='bg-white mb-4' textclassname='text-black'/>
+   <Button title='Cancel' className='bg-white mb-4' textclassname='text-black' onPress={()=>{navigation.goBack()}}/>
 
    </View>
 
