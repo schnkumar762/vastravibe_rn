@@ -11,6 +11,7 @@ const API_ROUTES = {
     USER:{
       LOGIN:`${CONFIG.API_BASE_URL}/users/auth/login`,
       SIGNUP:`${CONFIG.API_BASE_URL}/users/auth/signup`,
+      LOGOUT:`${CONFIG.API_BASE_URL}/users/auth/logout`,
     },
     ADMIN:{}
   },

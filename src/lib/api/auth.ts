@@ -14,6 +14,11 @@ interface IuserSignupAPIParamsType {
 
 }
 
+interface IuserLogoutAPIParamsType {
+    userId:String | null;
+
+}
+
 
 const userLogin = (params:IuserLoginAPIParamsType)=>{
     const {email,password} = params;
@@ -38,7 +43,16 @@ const userSignup = (params:IuserSignupAPIParamsType) =>{
     }
 
 };
+const userLogout = (params:IuserLogoutAPIParamsType)=>{
+    const {userId} = params;
+    try {
+        return RN_PUBLIC_API.post(API_ROUTES.AUTH.USER.LOGOUT,{userId});
+    } catch(error){
+        console.warn(error);
+        return {data:null,error};
+    };
+};
 
-const USER_AUTH_API = {userLogin,userSignup};
+const USER_AUTH_API = {userLogin,userSignup,userLogout};
 
 export default USER_AUTH_API;
