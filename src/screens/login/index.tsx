@@ -1,6 +1,7 @@
 import { Button } from "@/components/MyButton";
 import { Text } from "@/components/MyText";
 import { TextInput } from "@/components/MyTextInput";
+import { useAuth } from "@/hooks/useAuth";
 import USER_AUTH_API from "@/lib/api/auth";
 import { RootStackParamList } from "@/navigation/types";
 import { useNavigation } from "@react-navigation/core";
@@ -16,6 +17,8 @@ function LoginScreen() {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const { setAuth } = useAuth();
+
     const handleLogin = async () => {
     try {
       setLoading(true);
@@ -24,7 +27,8 @@ function LoginScreen() {
         email: email.trim(),
         password,
       });
-
+const {userId,token} = response.data.data;
+setAuth(String(userId),token);
       console.log("Login successful:", response.data);
 
       navigation.navigate("HomePage");
