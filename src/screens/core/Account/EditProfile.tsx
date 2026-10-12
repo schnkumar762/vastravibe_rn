@@ -1,0 +1,241 @@
+import { useEffect, useState } from 'react';
+import { ActivityIndicator, Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
+import PROFILE_API from '@/lib/api/profile';
+import { useAuth } from '@/hooks/useAuth';
+import { RootStackParamList } from '@/navigation/types';
+import { Button } from '@/components/MyButton';
+
+type Gender = 'MALE' | 'FEMALE' | 'OTHER' | 'PREFER_NOT_TO_SAY';
+
+interface Profile {
+    id: number;
+    userId: number;
+    firstName: string;
+    lastName: string;
+    profileImageUrl?: string | null;
+    dateOfBirth?: string | null;
+    gender?: Gender | null;
+}
+
+const GENDERS: Gender[] = ['MALE', 'FEMALE', 'OTHER', 'PREFER_NOT_TO_SAY'];
+
+function EditProfile() {
+    const { userId } = useAuth();
+    const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
+    const [profile, setProfile] = useState<Profile | null>(null);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [dateOfBirth, setDateOfBirth] = useState('');
+    const [profileImageUrl, setProfileImageUrl] = useState('');
+    const [gender, setGender] = useState<Gender>('PREFER_NOT_TO_SAY');
+
+    const [loading, setLoading] = useState(true);
+    const [saving, setSaving] = useState(false);
+
+    useEffect(() => {
+        let active = true;
+
+        const loadProfile = async () => {
+            if (userId == null) {
+                setLoading(false);
+                return;
+            }
+
+            try {
+                const response = await PROFILE_API.getAllProfiles();
+
+                if ('error' in response) {
+                    throw response.error;
+                }
+
+                const payload = response.data;
+                const profiles: Profile[] = Array.isArray(payload)
+                    ? payload
+                    : Array.isArray(payload?.content)
+                      ? payload.content
+                      : [];
+
+                const current = profiles.find(item => String(item.userId) === String(userId));
+
+                if (!active) return;
+
+                if (!current) {
+                    Alert.alert('Profile not found', 'Your profile could not be found.');
+                    return;
+                }
+
+                setProfile(current);
+                setFirstName(current.firstName ?? '');
+                setLastName(current.lastName ?? '');
+                setDateOfBirth(current.dateOfBirth ?? '');
+                setProfileImageUrl(current.profileImageUrl ?? '');
+                setGender(current.gender ?? 'PREFER_NOT_TO_SAY');
+            } catch (error) {
+                console.warn('Load profile failed:', error);
+                if (active) {
+                    Alert.alert('Error', 'Could not load your profile.');
+                }
+            } finally {
+                if (active) setLoading(false);
+            }
+        };
+
+        loadProfile();
+
+        return () => {
+            active = false;
+        };
+    }, [userId]);
+
+    const handleSave = async () => {
+        if (!profile) return;
+
+        if (!firstName.trim() || !lastName.trim()) {
+            Alert.alert('Validation', 'First name and last name are required.');
+            return;
+        }
+
+        if (dateOfBirth && !/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
+            Alert.alert('Invalid date', 'Use YYYY-MM-DD format.');
+            return;
+        }
+
+        setSaving(true);
+
+        try {
+            const response = await PROFILE_API.updateProfile(profile.id, {
+                firstName: firstName.trim(),
+                lastName: lastName.trim(),
+                dateOfBirth: dateOfBirth || undefined,
+                profileImageUrl: profileImageUrl.trim() || undefined,
+                gender,
+            });
+
+            if ('error' in response) {
+                throw response.error;
+            }
+
+            Alert.alert('Success', 'Profile updated successfully.', [
+                {
+                    text: 'OK',
+                    onPress: () => navigation.goBack(),
+                },
+            ]);
+        } catch (error) {
+            console.warn('Update profile failed:', error);
+            Alert.alert('Update failed', 'Please try again.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    if (loading) {
+        return (
+            <View className="flex-1 items-center justify-center bg-gray-50">
+                <ActivityIndicator size="large" />
+            </View>
+        );
+    }
+
+    if (!profile) {
+        return (
+            <View className="flex-1 items-center justify-center bg-gray-50 p-6">
+                <Text className="mb-4 text-gray-600">Profile not available.</Text>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Text className="font-semibold text-blue-600">Go back</Text>
+                </TouchableOpacity>
+            </View>
+        );
+    }
+
+    return (
+        <ScrollView
+            className="flex-1 bg-gray-50"
+            contentContainerStyle={{ padding: 20 }}
+            keyboardShouldPersistTaps="handled"
+        >
+            <Text className="mb-6 text-2xl font-bold text-gray-900">Edit Profile</Text>
+
+            <View className="gap-5 rounded-2xl bg-white p-5">
+                <Field label="First Name" value={firstName} onChangeText={setFirstName} placeholder="Enter first name" />
+
+                <Field label="Last Name" value={lastName} onChangeText={setLastName} placeholder="Enter last name" />
+
+                <Field
+                    label="Date of Birth (YYYY-MM-DD)"
+                    value={dateOfBirth}
+                    onChangeText={setDateOfBirth}
+                    placeholder="2000-05-21"
+                />
+
+                <Field
+                    label="Profile Image URL"
+                    value={profileImageUrl}
+                    onChangeText={setProfileImageUrl}
+                    placeholder="https://example.com/photo.jpg"
+                />
+
+                <Text className="font-semibold text-gray-800">Gender</Text>
+
+                <View className="flex-row flex-wrap gap-2">
+                    {GENDERS.map(item => {
+                        const selected = gender === item;
+
+                        return (
+                            <TouchableOpacity
+                                key={item}
+                                onPress={() => setGender(item)}
+                                className={`rounded-xl border px-3 py-3 ${
+                                    selected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 bg-white'
+                                }`}
+                            >
+                                <Text className={selected ? 'font-semibold text-blue-600' : 'text-gray-700'}>
+                                    {item.replaceAll('_', ' ')}
+                                </Text>
+                            </TouchableOpacity>
+                        );
+                    })}
+                </View>
+
+                <TouchableOpacity
+                    onPress={handleSave}
+                    disabled={saving}
+                    className={`mt-3 items-center rounded-xl py-4 ${saving ? 'bg-blue-300' : 'bg-blue-500'}`}
+                >
+                    <Text className="font-semibold text-white">{saving ? 'Saving...' : 'Save Changes'}</Text>
+                </TouchableOpacity>
+            </View>
+        </ScrollView>
+    );
+}
+
+function Field({
+    label,
+    value,
+    onChangeText,
+    placeholder,
+}: {
+    label: string;
+    value: string;
+    onChangeText: (value: string) => void;
+    placeholder: string;
+}) {
+    return (
+        <View className="gap-2">
+            <Text className="font-semibold text-gray-800">{label}</Text>
+            <TextInput
+                value={value}
+                onChangeText={onChangeText}
+                placeholder={placeholder}
+                placeholderTextColor="#9CA3AF"
+                className="rounded-xl border border-gray-200 bg-white px-4 py-3 text-gray-900"
+            />
+        </View>
+    );
+}
+
+export default EditProfile;
