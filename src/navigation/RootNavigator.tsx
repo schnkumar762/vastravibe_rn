@@ -8,6 +8,7 @@ import HomePageScreen from '../screens/homepage';
 
 import type { RootStackParamList } from './types';
 import StartScreen from '@/screens/authentication/start';
+import EditProfile from '@/screens/core/Account/EditProfile';
 // import ProductDetail from '@/screens/core/ProductDetail';
 
 
@@ -27,6 +28,7 @@ function RootNavigator() {
         <Stack.Screen name="HomePage" component={HomePageScreen} />
         {/* <Stack.Screen name="ProductDetail" component={ProductDetail}/> */}
         <Stack.Screen name="Start" component={StartScreen} />
+        <Stack.Screen name="EditProfile" component = {EditProfile}/>
         
       </Stack.Navigator>
     </NavigationContainer>
