@@ -135,7 +135,7 @@ function Account() {
                 )}
             </View>
 
-            <View className="mt-auto flex-col">
+            <View className="mt-auto flex-col gap-4">
                 <Button
                     title={logoutLoading ? 'Signing out...' : 'Signout'}
                     onPress={handleLogout}
