@@ -1,5 +1,5 @@
 import API_ROUTES from '@/constants/apiRoutes';
-import { RN_PUBLIC_API } from './client';
+import RN_API, { RN_PUBLIC_API } from './client';
 
 interface IuserLoginAPIParamsType {
     email: string;
@@ -11,10 +11,6 @@ interface IuserSignupAPIParamsType {
     email: string;
     phone: string;
     password: string;
-}
-
-interface IuserLogoutAPIParamsType {
-    userId: String | null;
 }
 
 const userLogin = (params: IuserLoginAPIParamsType) => {
@@ -35,16 +31,23 @@ const userSignup = (params: IuserSignupAPIParamsType) => {
         return { data: null, error };
     }
 };
-const userLogout = (params: IuserLogoutAPIParamsType) => {
-    const { userId } = params;
+const userSession = () => {
     try {
-        return RN_PUBLIC_API.post(API_ROUTES.AUTH.USER.LOGOUT, { userId });
+        return RN_API.get(API_ROUTES.AUTH.USER.SESSION);
+    } catch (error) {
+        console.warn(error);
+        return { data: null, error };
+    }
+};
+const userLogout = () => {
+    try {
+        return RN_API.post(API_ROUTES.AUTH.USER.LOGOUT);
     } catch (error) {
         console.warn(error);
         return { data: null, error };
     }
 };
 
-const USER_AUTH_API = { userLogin, userSignup, userLogout };
+const USER_AUTH_API = { userLogin, userSignup, userLogout, userSession };
 
 export default USER_AUTH_API;

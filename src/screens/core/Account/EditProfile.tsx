@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { ActivityIndicator, Alert, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Alert, Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { launchImageLibrary, type Asset } from 'react-native-image-picker';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import PROFILE_API from '@/lib/api/profile';
+import UTILS_API from '@/lib/api/utils';
 import { useAuth } from '@/hooks/useAuth';
 import { RootStackParamList } from '@/navigation/types';
-import { Button } from '@/components/MyButton';
 
 type Gender = 'MALE' | 'FEMALE' | 'OTHER' | 'PREFER_NOT_TO_SAY';
 
@@ -31,10 +32,12 @@ function EditProfile() {
     const [lastName, setLastName] = useState('');
     const [dateOfBirth, setDateOfBirth] = useState('');
     const [profileImageUrl, setProfileImageUrl] = useState('');
+    const [selectedImage, setSelectedImage] = useState<Asset | null>(null);
     const [gender, setGender] = useState<Gender>('PREFER_NOT_TO_SAY');
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [uploading, setUploading] = useState(false);
 
     useEffect(() => {
         let active = true;
@@ -46,6 +49,9 @@ function EditProfile() {
             }
 
             try {
+                //   const response = await PROFILE_API.getProfileById(userId);
+                //  getProfileById ye chalna chahiye
+
                 const response = await PROFILE_API.getAllProfiles();
 
                 if ('error' in response) {
@@ -76,6 +82,7 @@ function EditProfile() {
                 setGender(current.gender ?? 'PREFER_NOT_TO_SAY');
             } catch (error) {
                 console.warn('Load profile failed:', error);
+
                 if (active) {
                     Alert.alert('Error', 'Could not load your profile.');
                 }
@@ -91,6 +98,66 @@ function EditProfile() {
         };
     }, [userId]);
 
+    const handleChooseImage = async () => {
+        const result = await launchImageLibrary({
+            mediaType: 'photo',
+            selectionLimit: 1,
+            quality: 0.2,
+            maxWidth: 300,
+            maxHeight: 300,
+        });
+
+        if (result.didCancel) return;
+
+        if (result.errorCode) {
+            Alert.alert('Image picker error', result.errorMessage || result.errorCode);
+            return;
+        }
+
+        const image = result.assets?.[0];
+
+        if (!image?.uri) {
+            Alert.alert('Error', 'Could not select the image.');
+            return;
+        }
+
+        setSelectedImage(image);
+    };
+
+    const handleUploadImage = async () => {
+        if (!selectedImage?.uri) return;
+
+        setUploading(true);
+
+        try {
+            const response = await UTILS_API.imageUpload({
+                uri: selectedImage.uri,
+                fileName: selectedImage.fileName,
+                type: selectedImage.type,
+            });
+
+            if ('error' in response) {
+                throw response.error;
+            }
+
+            const imageUrl = response.data?.secure_url;
+
+            if (typeof imageUrl !== 'string' || !imageUrl) {
+                throw new Error('Cloudinary secure_url missing.');
+            }
+
+            setProfileImageUrl(imageUrl);
+            setSelectedImage(null);
+
+            Alert.alert('Success', 'Image uploaded successfully.');
+        } catch (error) {
+            console.warn('Image upload failed:', error);
+            Alert.alert('Upload failed', 'Could not upload the image.');
+        } finally {
+            setUploading(false);
+        }
+    };
+
     const handleSave = async () => {
         if (!profile) return;
 
@@ -104,14 +171,19 @@ function EditProfile() {
             return;
         }
 
+        if (selectedImage) {
+            Alert.alert('Upload image', 'Please upload your selected image before saving.');
+            return;
+        }
+
         setSaving(true);
 
         try {
-            const response = await PROFILE_API.updateProfile(profile.id, {
+            const response = await PROFILE_API.updateMyProfile({
                 firstName: firstName.trim(),
                 lastName: lastName.trim(),
                 dateOfBirth: dateOfBirth || undefined,
-                profileImageUrl: profileImageUrl.trim() || undefined,
+                profileImageUrl: profileImageUrl || undefined,
                 gender,
             });
 
@@ -145,12 +217,15 @@ function EditProfile() {
         return (
             <View className="flex-1 items-center justify-center bg-gray-50 p-6">
                 <Text className="mb-4 text-gray-600">Profile not available.</Text>
+
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Text className="font-semibold text-blue-600">Go back</Text>
                 </TouchableOpacity>
             </View>
         );
     }
+
+    const previewUri = selectedImage?.uri || profileImageUrl;
 
     return (
         <ScrollView
@@ -161,6 +236,46 @@ function EditProfile() {
             <Text className="mb-6 text-2xl font-bold text-gray-900">Edit Profile</Text>
 
             <View className="gap-5 rounded-2xl bg-white p-5">
+                <View className="items-center gap-3">
+                    {previewUri ? (
+                        <Image
+                            source={{ uri: previewUri }}
+                            className="h-28 w-28 rounded-full bg-gray-100"
+                            resizeMode="cover"
+                        />
+                    ) : (
+                        <View className="h-28 w-28 items-center justify-center rounded-full bg-blue-100">
+                            <Text className="text-3xl font-bold text-blue-600">
+                                {firstName.charAt(0).toUpperCase() || 'U'}
+                            </Text>
+                        </View>
+                    )}
+
+                    <TouchableOpacity
+                        onPress={handleChooseImage}
+                        disabled={uploading || saving}
+                        className="rounded-xl border border-blue-500 px-5 py-3"
+                    >
+                        <Text className="font-semibold text-blue-600">
+                            {selectedImage ? 'Choose Another Image' : 'Choose Image'}
+                        </Text>
+                    </TouchableOpacity>
+
+                    {selectedImage && (
+                        <TouchableOpacity
+                            onPress={handleUploadImage}
+                            disabled={uploading || saving}
+                            className="w-full items-center rounded-xl bg-blue-500 py-3"
+                        >
+                            {uploading ? (
+                                <ActivityIndicator color="#FFFFFF" />
+                            ) : (
+                                <Text className="font-semibold text-white">Upload Image</Text>
+                            )}
+                        </TouchableOpacity>
+                    )}
+                </View>
+
                 <Field label="First Name" value={firstName} onChangeText={setFirstName} placeholder="Enter first name" />
 
                 <Field label="Last Name" value={lastName} onChangeText={setLastName} placeholder="Enter last name" />
@@ -170,13 +285,6 @@ function EditProfile() {
                     value={dateOfBirth}
                     onChangeText={setDateOfBirth}
                     placeholder="2000-05-21"
-                />
-
-                <Field
-                    label="Profile Image URL"
-                    value={profileImageUrl}
-                    onChangeText={setProfileImageUrl}
-                    placeholder="https://example.com/photo.jpg"
                 />
 
                 <Text className="font-semibold text-gray-800">Gender</Text>
@@ -203,8 +311,8 @@ function EditProfile() {
 
                 <TouchableOpacity
                     onPress={handleSave}
-                    disabled={saving}
-                    className={`mt-3 items-center rounded-xl py-4 ${saving ? 'bg-blue-300' : 'bg-blue-500'}`}
+                    disabled={saving || uploading}
+                    className={`mt-3 items-center rounded-xl py-4 ${saving || uploading ? 'bg-blue-300' : 'bg-blue-500'}`}
                 >
                     <Text className="font-semibold text-white">{saving ? 'Saving...' : 'Save Changes'}</Text>
                 </TouchableOpacity>
@@ -227,6 +335,7 @@ function Field({
     return (
         <View className="gap-2">
             <Text className="font-semibold text-gray-800">{label}</Text>
+
             <TextInput
                 value={value}
                 onChangeText={onChangeText}

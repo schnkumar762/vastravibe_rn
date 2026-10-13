@@ -33,6 +33,7 @@ function Account() {
         if (userId == null) {
             setProfile(null);
             setLoading(false);
+            setLoadError(false);
             return;
         }
 
@@ -40,24 +41,31 @@ function Account() {
         setLoadError(false);
 
         try {
-            const response = await PROFILE_API.getAllProfiles();
+            const response = await PROFILE_API.getMyProfile();
 
             if ('error' in response) {
                 throw response.error;
             }
 
-            const payload = response.data;
+            const currentProfile = response.data as Profile | null;
 
-            // Supports a plain array or a paginated Spring response.
-            const profiles: Profile[] = Array.isArray(payload)
-                ? payload
-                : Array.isArray(payload?.content)
-                  ? payload.content
-                  : [];
-
-            const currentProfile = profiles.find(item => String(item.userId) === String(userId)) ?? null;
-
+            if (!currentProfile) {
+                setProfile(null);
+                Alert.alert('Profile not found', 'Your profile could not be found.');
+                return;
+            }
             setProfile(currentProfile);
+            // Supports a plain array or a paginated Spring response.
+            // const profiles: Profile[] = Array.isArray(payload)
+            //     ? payload
+            //     : Array.isArray(payload?.content)
+            //       ? payload.content
+            //       : [];
+
+            // i already have getProfileById(id) api
+            // profiles.find(item => String(item.userId) === String(userId)) ?? null;
+
+            //  setProfile(currentProfile);
         } catch (error) {
             console.warn('Fetch profile failed:', error);
             setLoadError(true);
@@ -76,7 +84,7 @@ function Account() {
         try {
             setLogoutLoading(true);
 
-            const response = await USER_AUTH_API.userLogout({ userId });
+            const response = await USER_AUTH_API.userLogout();
 
             if ('error' in response) {
                 throw response.error;
