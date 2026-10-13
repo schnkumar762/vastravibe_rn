@@ -11,6 +11,7 @@ const API_ROUTES = {
         USER: {
             LOGIN: `${CONFIG.API_BASE_URL}/users/auth/login`,
             SIGNUP: `${CONFIG.API_BASE_URL}/users/auth/signup`,
+            SESSION: `${CONFIG.API_BASE_URL}/users/auth/session`,
             LOGOUT: `${CONFIG.API_BASE_URL}/users/auth/logout`,
         },
         ADMIN: {},
@@ -22,6 +23,9 @@ const API_ROUTES = {
         UPDATE: `${CONFIG.API_BASE_URL}/profiles/:id`,
         DELETE: `${CONFIG.API_BASE_URL}/profiles/:id`,
         DELETE_ALL: `${CONFIG.API_BASE_URL}/profiles`,
+    },
+    UTILS: {
+        IMAGE_UPLOAD: `${CONFIG.API_BASE_URL}/images/upload`,
     },
 };
 

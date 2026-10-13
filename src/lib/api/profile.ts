@@ -2,7 +2,7 @@ import API_ROUTES from '@/constants/apiRoutes';
 import RN_PUBLIC_API from '../api/client';
 
 interface IProfileCreateAPIParamsType {
-    userId: number;
+    userId: number | string;
     firstName: string;
     lastName: string;
     profileImageUrl?: string;
@@ -38,7 +38,7 @@ const getAllProfiles = async () => {
     }
 };
 
-const getProfileById = async (id: number) => {
+const getProfileById = async (id: string | number) => {
     try {
         const url = API_ROUTES.PROFILE.DETAIL.replace(':id', String(id));
         const response = await RN_PUBLIC_API.get(url);
@@ -49,7 +49,7 @@ const getProfileById = async (id: number) => {
     }
 };
 
-const updateProfile = async (id: number, params: IProfileUpdateAPIParamsType) => {
+const updateProfile = async (id: number | string, params: IProfileUpdateAPIParamsType) => {
     try {
         const url = API_ROUTES.PROFILE.UPDATE.replace(':id', String(id));
         const response = await RN_PUBLIC_API.put(url, params);
@@ -60,7 +60,7 @@ const updateProfile = async (id: number, params: IProfileUpdateAPIParamsType) =>
     }
 };
 
-const deleteProfileById = async (id: number) => {
+const deleteProfileById = async (id: number | string) => {
     try {
         const url = API_ROUTES.PROFILE.DELETE.replace(':id', String(id));
         const response = await RN_PUBLIC_API.delete(url);
