@@ -19,9 +19,7 @@ const API_ROUTES = {
     PROFILE: {
         CREATE: `${CONFIG.API_BASE_URL}/profiles`,
         LIST: `${CONFIG.API_BASE_URL}/profiles`,
-        DETAIL: `${CONFIG.API_BASE_URL}/profiles/:id`,
-        UPDATE: `${CONFIG.API_BASE_URL}/profiles/:id`,
-        DELETE: `${CONFIG.API_BASE_URL}/profiles/:id`,
+        ME: `${CONFIG.API_BASE_URL}/profiles/me`,
         DELETE_ALL: `${CONFIG.API_BASE_URL}/profiles`,
     },
     UTILS: {

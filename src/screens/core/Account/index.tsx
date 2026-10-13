@@ -41,7 +41,7 @@ function Account() {
         setLoadError(false);
 
         try {
-            const response = await PROFILE_API.getProfileById(userId);
+            const response = await PROFILE_API.getMyProfile();
 
             if ('error' in response) {
                 throw response.error;
@@ -84,7 +84,7 @@ function Account() {
         try {
             setLogoutLoading(true);
 
-            const response = await USER_AUTH_API.userLogout({ userId });
+            const response = await USER_AUTH_API.userLogout();
 
             if ('error' in response) {
                 throw response.error;

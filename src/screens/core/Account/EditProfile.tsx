@@ -179,7 +179,7 @@ function EditProfile() {
         setSaving(true);
 
         try {
-            const response = await PROFILE_API.updateProfile(profile.id, {
+            const response = await PROFILE_API.updateMyProfile({
                 firstName: firstName.trim(),
                 lastName: lastName.trim(),
                 dateOfBirth: dateOfBirth || undefined,

@@ -1,5 +1,5 @@
 import API_ROUTES from '@/constants/apiRoutes';
-import RN_PUBLIC_API from '../api/client';
+import RN_API from './client';
 
 interface IProfileCreateAPIParamsType {
     userId: number | string;
@@ -20,7 +20,7 @@ interface IProfileUpdateAPIParamsType {
 
 const createProfile = async (params: IProfileCreateAPIParamsType) => {
     try {
-        const response = await RN_PUBLIC_API.post(API_ROUTES.PROFILE.CREATE, params);
+        const response = await RN_API.post(API_ROUTES.PROFILE.CREATE, params);
         return response;
     } catch (error) {
         console.warn(error);
@@ -30,7 +30,7 @@ const createProfile = async (params: IProfileCreateAPIParamsType) => {
 
 const getAllProfiles = async () => {
     try {
-        const response = await RN_PUBLIC_API.get(API_ROUTES.PROFILE.LIST);
+        const response = await RN_API.get(API_ROUTES.PROFILE.LIST);
         return response;
     } catch (error) {
         console.warn(error);
@@ -38,10 +38,9 @@ const getAllProfiles = async () => {
     }
 };
 
-const getProfileById = async (id: string | number) => {
+const getMyProfile = async () => {
     try {
-        const url = API_ROUTES.PROFILE.DETAIL.replace(':id', String(id));
-        const response = await RN_PUBLIC_API.get(url);
+        const response = await RN_API.get(API_ROUTES.PROFILE.ME);
         return response;
     } catch (error) {
         console.warn(error);
@@ -49,10 +48,9 @@ const getProfileById = async (id: string | number) => {
     }
 };
 
-const updateProfile = async (id: number | string, params: IProfileUpdateAPIParamsType) => {
+const updateMyProfile = async (params: IProfileUpdateAPIParamsType) => {
     try {
-        const url = API_ROUTES.PROFILE.UPDATE.replace(':id', String(id));
-        const response = await RN_PUBLIC_API.put(url, params);
+        const response = await RN_API.put(API_ROUTES.PROFILE.ME, params);
         return response;
     } catch (error) {
         console.warn(error);
@@ -60,10 +58,9 @@ const updateProfile = async (id: number | string, params: IProfileUpdateAPIParam
     }
 };
 
-const deleteProfileById = async (id: number | string) => {
+const deleteMyProfile = async () => {
     try {
-        const url = API_ROUTES.PROFILE.DELETE.replace(':id', String(id));
-        const response = await RN_PUBLIC_API.delete(url);
+        const response = await RN_API.delete(API_ROUTES.PROFILE.ME);
         return response;
     } catch (error) {
         console.warn(error);
@@ -72,7 +69,7 @@ const deleteProfileById = async (id: number | string) => {
 };
 const deleteAllProfiles = async () => {
     try {
-        const response = await RN_PUBLIC_API.delete(API_ROUTES.PROFILE.DELETE_ALL);
+        const response = await RN_API.delete(API_ROUTES.PROFILE.DELETE_ALL);
         return response;
     } catch (error) {
         console.warn(error);
@@ -83,9 +80,9 @@ const deleteAllProfiles = async () => {
 const PROFILE_API = {
     createProfile,
     getAllProfiles,
-    getProfileById,
-    updateProfile,
-    deleteProfileById,
+    getMyProfile,
+    updateMyProfile,
+    deleteMyProfile,
     deleteAllProfiles,
 };
 export default PROFILE_API;
